@@ -1,25 +1,73 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import ErrorBoundary from './error-boundary.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class UseLifeCycle extends React.Component {
+    
+    state = {
+        show: true,
+        data: []
+    };
+
+    // constructor(props) {
+    //     super(props);
+    //     state = {
+    //         show: true,
+    //         data: []
+    //     }
+    //     console.log('constructor');
+    // }
+
+    static getDerivedStateFromProps(props, state) {
+        console.log('getDerivedStateFromProps');
+        if (props.show !== state.show) {
+            return {
+                show: props.show
+            };
+        }
+        // return {
+        //   show: true
+        // };
+    }
+    shouldComponentUpdate(nextProps,nextState){
+        console.log('shouldComponentUpdate');
+        return true;
+        // return nextState.show;
+    }
+    handleClick() {
+        console.log('handleClick');
+        this.setState({ show: !this.state.show });
+    }
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        console.log('getSanpshotBeforeUpdate');
+        return 'returned object from getSnapshotBeforeUpdate';
+    }
+    componentDidUpdate(prevProps, prevState,snapshot) {
+        console.log('componentDidUpdate');
+        console.log(snapshot);
+    }
+    render() {
+        console.log('render');
+        return (
+            <>
+            <ErrorBoundary>
+            
+            <h1 onClick={() => this.handleClick()} >{this.state.show ? 'Show' : 'Hide'}</h1>
+            </ErrorBoundary>
+            </>
+        );
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+        // axios.get('someURL').then(res => {
+        //     const { data } = res;
+        //     this.setState({ data });
+        // });
+        setTimeout(() => {
+          this.setState({ show: true });
+        }, 3000);
+    }
 }
 
-export default App;
+export default UseLifeCycle;
